@@ -1,0 +1,14 @@
+<check if="{{ is_array(@errors) }}">
+    <div class="row">
+        <div class="columns small-12">
+
+            <div class="alert callout" data-closable>
+                <h5>You have encountered error</h5>
+                <repeat group="{{ @errors }}" value="{{ @error }}">
+                    - {{ @error }} <br>
+                </repeat>
+            </div>
+
+        </div>
+    </div>
+</check>
