@@ -5,10 +5,11 @@
     <title>Assessment test</title>
 
     <!-- Usually i use SASS, browserify / webpack for moduler JS -->
-    <!-- For assessment purpose i am skipped overhead and using default CSS layouts from foundation framework -->
+    <!-- For assessment purpose i am skipping overhead and using default CSS layouts from foundation framework -->
     <link rel="stylesheet" href="{{@BASE}}/assets/css/foundation.min.css">
     <style>
         .headline { padding: 20px 0 10px; }
+        small { opacity: 0.7; }
     </style>
 </head>
 <body>
@@ -18,8 +19,8 @@
         <div class="top-bar-left">
             <ul class="dropdown menu">
                 <li class="menu-text">Assessment test</li>
-                <li><a href="{{@BASE}}/tasks">All tasks</a></li>
-                <li><a href="{{@BASE}}/tasks/create">Add new task</a></li>
+                <li><a href="{{ @BASE }}{{ 'home' | alias }}">All tasks</a></li>
+                <li><a href="{{ @BASE }}{{ 'task.create' | alias }}">Add new task</a></li>
             </ul>
         </div>
     </div>

@@ -69,13 +69,44 @@ class Model
      * @param $data
      * @return array
      */
-    public function save($data)
+    public function add($data)
     {
         if(count($data) == 0) {
             return false;
         }
 
         return $this->db->table($this->table)->insert(array_merge($data, $this->getTimestamps()));
+    }
+
+    /**
+     * Update a record
+     *
+     * @param $data
+     * @param $condition
+     * @return array|bool
+     */
+    public function update($data, $condition)
+    {
+        if(count($data) == 0) {
+            return false;
+        }
+
+        return $this->db->table($this->table)->update(array_merge($data, $this->getTimestamps(true)), $condition);
+    }
+
+    /**
+     * Delete a record
+     *
+     * @param $condition
+     * @return array|bool
+     */
+    public function delete($condition)
+    {
+        if(count($condition) == 0) {
+            return false;
+        }
+
+        return $this->db->table($this->table)->delete($condition);
     }
 
     /**
@@ -89,10 +120,12 @@ class Model
         $timestamps = [];
 
         if(!$update) {
+            $timestamps['created_at'] = Carbon::now();
             $timestamps['updated_at'] = Carbon::now();
         }
-
-        $timestamps['created_at'] = Carbon::now();
+        else {
+            $timestamps['updated_at'] = Carbon::now();
+        }
 
         return $timestamps;
     }

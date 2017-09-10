@@ -1,0 +1,53 @@
+<include href="views/partials/_header.html" />
+
+<div class="row">
+    <div class="columns small-12">
+        <check if="{{ @task }}">
+            <true>
+                <h2 class="h3 headline">{{ $task->name }}</h2>
+            </true>
+            <false>
+                <h2 class="h3 headline">Add new task</h2>
+            </false>
+        </check>
+    </div>
+</div>
+
+<include href="views/partials/_errors.html" />
+
+<check if="{{ @task }}">
+    <true>
+        <form action="{{@BASE}}{{ 'task.edit', 'task='.@task->id | alias }}" method="post">
+    </true>
+    <false>
+        <form action="{{@BASE}}{{ 'tasks' | alias }}" method="post">
+    </false>
+</check>
+    <div class="row">
+        <div class="columns small-12">
+            <label for="name">Task name
+                <input type="text" name="name" id="name" placeholder="Enter task name" value="{{ $task ? $task->name : '' }}">
+            </label>
+        </div>
+        <div class="columns small-12">
+            <label for="description">Task description
+                <textarea name="description" id="description" placeholder="Enter small brief of tasks" rows="7">{{ $task ? $task->description : '' }}</textarea>
+            </label>
+        </div>
+        <div class="columns small-12">
+            <check if="{{ @task }}">
+                <true>
+                    <button type="submit" class="button">Update</button>
+                    <a href="{{@BASE}}{{ 'task.show', 'task='.@task->id | alias }}" class="button secondary">Back to task</a>
+                    <br>
+                    <small>Last updated {{ @Helper::formatDateTime($task->updated_at) }}</small>
+                </true>
+                <false>
+                    <button type="submit" class="button">Save</button>
+                </false>
+            </check>
+        </div>
+    </div>
+</form>
+
+<include href="views/partials/_footer.html" />

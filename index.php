@@ -18,12 +18,14 @@ $f3 = \Base::instance();
 /**
  * Routing
  */
-$f3->route('GET /', '\App\Controller\TaskController->index');
-$f3->route('GET /tasks', '\App\Controller\TaskController->index');
-$f3->route('GET /tasks/create', '\App\Controller\TaskController->create');
-$f3->route('POST /tasks', '\App\Controller\TaskController->store');
-$f3->route('GET /tasks/@task', '\App\Controller\TaskController->show');
-$f3->route('GET /tasks/@task/edit', '\App\Controller\TaskController->edit');
+$f3->route('GET             @home: /',                          '\App\Controller\TaskController->index');
+$f3->route('GET             @tasks: /tasks',                    '\App\Controller\TaskController->index');
+$f3->route('GET             @task.create: /tasks/create',       '\App\Controller\TaskController->create');
+$f3->route('POST            @task.store: /tasks',               '\App\Controller\TaskController->store');
+$f3->route('GET             @task.show: /tasks/@task',          '\App\Controller\TaskController->show');
+$f3->route('GET             @task.edit: /tasks/@task/edit',     '\App\Controller\TaskController->edit');
+$f3->route('POST|PUT|PATCH  @task.update: /tasks/@task/edit',   '\App\Controller\TaskController->update');
+$f3->route('POST|DELETE     @task.delete: /tasks/@task/delete', '\App\Controller\TaskController->destroy');
 
 /**
  * Global variable

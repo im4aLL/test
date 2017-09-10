@@ -9,6 +9,13 @@ class TaskController extends Controller
 {
 
     /**
+     * Form errors
+     *
+     * @var array
+     */
+    protected $errors = [];
+
+    /**
      * Get all tasks
      */
     public function index()
@@ -23,13 +30,12 @@ class TaskController extends Controller
 
     /**
      * Create a task view
-     * @param null $errors
      */
-    public function create($errors = null)
+    public function create()
     {
-        $this->f3->set('errors', $errors);
+        $this->f3->set('errors', $this->errors);
 
-        echo \Template::instance()->render('views/Tasks-form.html');
+        echo \Template::instance()->render('views/Task-form.html');
         return;
     }
 
@@ -38,27 +44,17 @@ class TaskController extends Controller
      */
     public function store()
     {
-        $errors = [];
-
-        if(!$this->f3->exists('POST.name') || $this->f3->get('POST.name') == null) {
-            $errors['name'] = 'You need to enter task name';
-        }
-
-        if(!$this->f3->exists('POST.description') || $this->f3->get('POST.description') == null) {
-            $errors['description'] = 'Please enter task description';
-        }
-
-        if(count($errors) > 0) {
-            return $this->create($errors);
+        if($this->isFormInvalid()) {
+            return $this->create($this->errors);
         }
 
         $task = new Task($this->f3);
-        $task->save([
+        $task->add([
             'name' => $this->f3->get('POST.name'),
             'description' => $this->f3->get('POST.description'),
         ]);
 
-        $this->f3->reroute('/tasks');
+        $this->f3->reroute('@tasks');
         return;
     }
 
@@ -89,8 +85,66 @@ class TaskController extends Controller
         $task = new Task($this->f3);
         $this->f3->set('task', $task->get($params['task']));
         $this->f3->set('Helper', Helper::class);
+        $this->f3->set('errors', $this->errors);
 
         echo \Template::instance()->render('views/Task-form.html');
         return;
+    }
+
+    /**
+     * Update a single task
+     *
+     * @param $f3
+     * @param $params
+     */
+    public function update($f3, $params)
+    {
+        if($this->isFormInvalid()) {
+            return $this->edit($f3, $params);
+        }
+
+        $task = new Task($this->f3);
+        $task->update([
+            'name' => $this->f3->get('POST.name'),
+            'description' => $this->f3->get('POST.description'),
+        ], ['id' => $params['task']]);
+
+        $this->f3->reroute('@task.show(@task='.$params['task'].')');
+        return;
+    }
+
+    /**
+     * Delete a task
+     *
+     * @param $f3
+     * @param $params
+     */
+    public function destroy($f3, $params)
+    {
+        $task = new Task($this->f3);
+        $task->delete(['id' => $params['task']]);
+
+        $this->f3->reroute('@tasks');
+        return;
+    }
+
+    /**
+     * Form validate checker
+     *
+     * @return bool
+     */
+    protected function isFormInvalid()
+    {
+        $this->errors = [];
+
+        if(!$this->f3->exists('POST.name') || $this->f3->get('POST.name') == null) {
+            $this->errors['name'] = 'You need to enter task name';
+        }
+
+        if(!$this->f3->exists('POST.description') || $this->f3->get('POST.description') == null) {
+            $this->errors['description'] = 'Please enter task description';
+        }
+
+        return count($this->errors) > 0;
     }
 }

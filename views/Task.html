@@ -10,8 +10,21 @@
     <div class="columns small-12">
         <p>{{ nl2br($task->description) }}</p>
 
-        <hr>
-        <a href="{{@BASE}}/tasks/{{ $task->id }}/edit" class="button">Edit this task</a>
+        <small>Added {{ @Helper::formatDateTime($task->created_at) }} and last updated {{ @Helper::formatDateTime($task->updated_at) }}</small>
+
+        <br><br>
+
+        <div class="row">
+            <div class="columns large-6">
+                <a href="{{@BASE}}{{ 'task.edit', 'task='.@task->id | alias }}" class="button">Edit this task</a>
+                <a href="{{@BASE}}{{ 'tasks' | alias }}" class="button secondary">Back to all tasks</a>
+            </div>
+            <div class="columns large-6">
+                <form action="{{@BASE}}{{ 'task.delete', 'task='.@task->id | alias }}" method="post">
+                    <button type="submit" class="button alert float-right">Delete this task</button>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 
